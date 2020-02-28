@@ -112,7 +112,7 @@ namespace ShopApp
 
                 command.ExecuteNonQuery();
                 MessageBox.Show($"Added objects");
-                dGrdViewEmployees();
+         
             }
         }
 
