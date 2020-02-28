@@ -23,6 +23,7 @@ namespace ShopApp
         private void Form1_Load(object sender, EventArgs e)
         {
             FillDepartments();
+
         }
         private void FillDepartments()
         {
@@ -38,19 +39,16 @@ namespace ShopApp
                 cmb_Departments.DisplayMember = "dpt_Name";
                 cmb_Departments.ValueMember = "dpt_ID";
                 cmb_Departments.DataSource = dptDS.Tables["Departments"];
+                dGrdViewEmployees.MultiSelect = false;
+
             }
         }
-
         private void cmb_Departments_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmb_Departments.SelectedIndex < 0)
                 return;
             string dpt_ID = cmb_Departments.SelectedValue.ToString();
             string strSQL = "Select * From Employees Where dpt_ID = " + dpt_ID;
-
-
-
-
             SqlConnection empConnection = new SqlConnection();
             empConnection.ConnectionString = connectionString;
             empConnection.Open();
@@ -59,55 +57,94 @@ namespace ShopApp
             dAdapt.Fill(table);
             dGrdViewEmployees.DataSource = table;
         }
-
-        private void Insert_Button_Click(object sender, EventArgs e)
+        private void DGrdViewEmployees_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            using (SqlConnection dptConnection = new SqlConnection())
+            if (dGrdViewEmployees.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null)
             {
-                dptConnection.ConnectionString = connectionString;
-                dptConnection.Open();
-                var comand = new SqlCommand("Insert Into  Employees (dpt_ID,emp_FirstName,emp_LastName,emp_Patronymic,emp_BirdtDay) " +
-                  $"VALUES (@dpt_ID,@emp_FirstName,@emp_LastName,@emp_Patronymic,@emp_BirdtDay)", dptConnection);
-                comand.Parameters.AddWithValue("dpt_ID", ID_TextBox.Text);
-                comand.Parameters.AddWithValue("emp_FirstName", Name_TextBox.Text);
-                comand.Parameters.AddWithValue("emp_LastName", SurName_TextBox.Text);
-                comand.Parameters.AddWithValue("emp_Patronymic", Patro_TextBox.Text);
-                comand.Parameters.AddWithValue("emp_BirdtDay", Birt_TextBox.Text);
-                comand.ExecuteNonQuery();
-                MessageBox.Show($"Added objects");
+                dGrdViewEmployees.CurrentRow.Selected = true;
+                Delete_Update_TextBox.Text = dGrdViewEmployees.Rows[e.RowIndex].Cells["emp_ID"].FormattedValue.ToString();
+                dpt_Id_TextBox.Text = dGrdViewEmployees.Rows[e.RowIndex].Cells["dpt_ID"].FormattedValue.ToString();
+                Name_TextBox.Text = dGrdViewEmployees.Rows[e.RowIndex].Cells["emp_FirstName"].FormattedValue.ToString();
+                SurName_TextBox.Text = dGrdViewEmployees.Rows[e.RowIndex].Cells["emp_LastName"].FormattedValue.ToString();
+                Patro_TextBox.Text = dGrdViewEmployees.Rows[e.RowIndex].Cells["emp_Patronymic"].FormattedValue.ToString();
+                Birt_TextBox.Text = dGrdViewEmployees.Rows[e.RowIndex].Cells["emp_BirdtDay"].FormattedValue.ToString();
             }
 
         }
-        private void Delete_Button_Click(object sender, EventArgs e)
+        private void Delete()
         {
-            using (SqlConnection dptConnection = new SqlConnection())
+            if (MessageBox.Show("Sure??", "Delete", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
             {
-                dptConnection.ConnectionString = connectionString;
-                dptConnection.Open();
-                var comand = new SqlCommand($"DELETE Employees  WHERE [emp_ID]=@emp_ID", dptConnection);
-                comand.Parameters.AddWithValue("emp_ID", Delete_Update_TextBox.Text);
-                comand.ExecuteNonQuery();
-                MessageBox.Show($"Deleted objects");
+                int index = dGrdViewEmployees.SelectedRows[0].Index;
+                dGrdViewEmployees.Rows.RemoveAt(index);
+                ClearTxt();
+                
             }
+        }
 
+        private void Delete_Button_Click(object sender, EventArgs e)
+        { 
+            Delete();
+        }
+        private void ClearTxt()
+        {
+            Delete_Update_TextBox.Text = "";
+            dpt_Id_TextBox.Text = "";
+            Name_TextBox.Text = "";
+            SurName_TextBox.Text = "";
+            Patro_TextBox.Text = "";
+            Birt_TextBox.Text = "";
+
+        }
+        private void Add()
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+                var command = new SqlCommand($"INSERT INTO Employees (emp_FirstName,emp_LastName, emp_Patronymic,emp_BirdtDay,dpt_ID) " +
+                  $"VALUES (@emp_FirstName,@emp_LastName,@emp_Patronymic,@emp_BirdtDay,@dpt_ID)", connection);
+                command.Parameters.AddWithValue("emp_FirstName", Name_TextBox.Text);
+                command.Parameters.AddWithValue("emp_LastName", SurName_TextBox.Text);
+                command.Parameters.AddWithValue("emp_Patronymic", Patro_TextBox.Text);
+                command.Parameters.AddWithValue("emp_BirdtDay", Birt_TextBox.Text);
+                command.Parameters.AddWithValue("dpt_ID", dpt_Id_TextBox.Text);
+
+                command.ExecuteNonQuery();
+                MessageBox.Show($"Added objects");
+                dGrdViewEmployees();
+            }
+        }
+
+        private void Insert_Button_Click(object sender, EventArgs e)
+        {
+            Add();
         }
 
         private void Update_Button_Click(object sender, EventArgs e)
         {
-            using (SqlConnection dptConnection = new SqlConnection())
+            UpdateElments();
+        }
+        private void UpdateElments()
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                dptConnection.ConnectionString = connectionString;
-                dptConnection.Open();
-                var comand = new SqlCommand("Update Employees Set[dpt_ID]=@dpt_ID,[emp_FirstName]=@emp_FirstName," +
-                    "[emp_LastName]=@emp_LastName,[emp_Patronymic]=@emp_Patronymic,[emp_BirdtDay]=@emp_BirdtDay Where[emp_ID]=@emp_ID ", dptConnection);
-                comand.Parameters.AddWithValue("dpt_ID", ID_TextBox.Text);
-                comand.Parameters.AddWithValue("emp_FirstName", Name_TextBox.Text);
-                comand.Parameters.AddWithValue("emp_LastName", SurName_TextBox.Text);
-                comand.Parameters.AddWithValue("emp_Patronymic", Patro_TextBox.Text);
-                comand.Parameters.AddWithValue("emp_BirdtDay", Birt_TextBox.Text);
-                comand.Parameters.AddWithValue("emp_ID", Delete_Update_TextBox.Text);
-                comand.ExecuteNonQuery();
-                MessageBox.Show($"Updated objects");
+
+
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
+                var command = new SqlCommand($"Update Employees Set [emp_FirstName] =@emp_FirstName ,[emp_LastName] = @emp_LastName, [emp_Patronymic]=@emp_Patronymic,[emp_BirdtDay]=@emp_BirdtDay," +
+                                             $"[dpt_ID]=@dpt_ID Where [emp_ID]=@emp_ID ", connection);
+                command.Parameters.AddWithValue("emp_FirstName", Name_TextBox.Text);
+                command.Parameters.AddWithValue("emp_LastName", SurName_TextBox.Text);
+                command.Parameters.AddWithValue("emp_Patronymic", Patro_TextBox.Text);
+                command.Parameters.AddWithValue("emp_BirdtDay", Birt_TextBox.Text);
+                command.Parameters.AddWithValue("dpt_ID", dpt_Id_TextBox.Text);
+                command.Parameters.AddWithValue("emp_ID", Delete_Update_TextBox.Text);
+
+
+                command.ExecuteNonQuery();
+                MessageBox.Show($"Added objects");
             }
 
         }

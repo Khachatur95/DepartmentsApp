@@ -34,7 +34,6 @@
             this.Insert_Button = new System.Windows.Forms.Button();
             this.Delete_Button = new System.Windows.Forms.Button();
             this.Update_Button = new System.Windows.Forms.Button();
-            this.ID_TextBox = new System.Windows.Forms.TextBox();
             this.SurName_TextBox = new System.Windows.Forms.TextBox();
             this.Name_TextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -46,6 +45,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
+            this.dpt_Id_TextBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dGrdViewEmployees)).BeginInit();
             this.SuspendLayout();
             // 
@@ -69,6 +69,7 @@
             this.dGrdViewEmployees.Name = "dGrdViewEmployees";
             this.dGrdViewEmployees.Size = new System.Drawing.Size(787, 226);
             this.dGrdViewEmployees.TabIndex = 1;
+            this.dGrdViewEmployees.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DGrdViewEmployees_CellMouseClick);
             // 
             // label1
             // 
@@ -109,23 +110,16 @@
             this.Update_Button.UseVisualStyleBackColor = true;
             this.Update_Button.Click += new System.EventHandler(this.Update_Button_Click);
             // 
-            // ID_TextBox
-            // 
-            this.ID_TextBox.Location = new System.Drawing.Point(56, 306);
-            this.ID_TextBox.Name = "ID_TextBox";
-            this.ID_TextBox.Size = new System.Drawing.Size(100, 20);
-            this.ID_TextBox.TabIndex = 7;
-            // 
             // SurName_TextBox
             // 
-            this.SurName_TextBox.Location = new System.Drawing.Point(162, 306);
+            this.SurName_TextBox.Location = new System.Drawing.Point(118, 306);
             this.SurName_TextBox.Name = "SurName_TextBox";
             this.SurName_TextBox.Size = new System.Drawing.Size(100, 20);
             this.SurName_TextBox.TabIndex = 8;
             // 
             // Name_TextBox
             // 
-            this.Name_TextBox.Location = new System.Drawing.Point(279, 306);
+            this.Name_TextBox.Location = new System.Drawing.Point(224, 306);
             this.Name_TextBox.Name = "Name_TextBox";
             this.Name_TextBox.Size = new System.Drawing.Size(100, 20);
             this.Name_TextBox.TabIndex = 9;
@@ -133,7 +127,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(92, 279);
+            this.label2.Location = new System.Drawing.Point(40, 279);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(39, 13);
             this.label2.TabIndex = 10;
@@ -142,7 +136,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(285, 279);
+            this.label3.Location = new System.Drawing.Point(235, 279);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(80, 13);
             this.label3.TabIndex = 11;
@@ -151,7 +145,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(181, 279);
+            this.label4.Location = new System.Drawing.Point(126, 279);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(81, 13);
             this.label4.TabIndex = 12;
@@ -159,21 +153,21 @@
             // 
             // Patro_TextBox
             // 
-            this.Patro_TextBox.Location = new System.Drawing.Point(387, 306);
+            this.Patro_TextBox.Location = new System.Drawing.Point(331, 306);
             this.Patro_TextBox.Name = "Patro_TextBox";
             this.Patro_TextBox.Size = new System.Drawing.Size(100, 20);
             this.Patro_TextBox.TabIndex = 13;
             // 
             // Birt_TextBox
             // 
-            this.Birt_TextBox.Location = new System.Drawing.Point(493, 306);
+            this.Birt_TextBox.Location = new System.Drawing.Point(437, 306);
             this.Birt_TextBox.Name = "Birt_TextBox";
             this.Birt_TextBox.Size = new System.Drawing.Size(100, 20);
             this.Birt_TextBox.TabIndex = 14;
             // 
             // Delete_Update_TextBox
             // 
-            this.Delete_Update_TextBox.Location = new System.Drawing.Point(599, 306);
+            this.Delete_Update_TextBox.Location = new System.Drawing.Point(543, 306);
             this.Delete_Update_TextBox.Name = "Delete_Update_TextBox";
             this.Delete_Update_TextBox.Size = new System.Drawing.Size(100, 20);
             this.Delete_Update_TextBox.TabIndex = 15;
@@ -181,7 +175,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(393, 279);
+            this.label5.Location = new System.Drawing.Point(337, 279);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(85, 13);
             this.label5.TabIndex = 16;
@@ -190,7 +184,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(505, 279);
+            this.label6.Location = new System.Drawing.Point(448, 279);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(73, 13);
             this.label6.TabIndex = 17;
@@ -199,35 +193,43 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(596, 279);
+            this.label7.Location = new System.Drawing.Point(540, 279);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(122, 13);
             this.label7.TabIndex = 18;
             this.label7.Text = "emp_ID(Delete_Update)";
             // 
+            // dpt_Id_TextBox
+            // 
+            this.dpt_Id_TextBox.Location = new System.Drawing.Point(12, 306);
+            this.dpt_Id_TextBox.Name = "dpt_Id_TextBox";
+            this.dpt_Id_TextBox.Size = new System.Drawing.Size(100, 20);
+            this.dpt_Id_TextBox.TabIndex = 19;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.Update_Button);
+            this.Controls.Add(this.Delete_Button);
+            this.Controls.Add(this.Insert_Button);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.cmb_Departments);
+            this.Controls.Add(this.Birt_TextBox);
+            this.Controls.Add(this.Delete_Update_TextBox);
+            this.Controls.Add(this.dpt_Id_TextBox);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.Delete_Update_TextBox);
-            this.Controls.Add(this.Birt_TextBox);
             this.Controls.Add(this.Patro_TextBox);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.Name_TextBox);
             this.Controls.Add(this.SurName_TextBox);
-            this.Controls.Add(this.ID_TextBox);
-            this.Controls.Add(this.Update_Button);
-            this.Controls.Add(this.Delete_Button);
-            this.Controls.Add(this.Insert_Button);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.dGrdViewEmployees);
-            this.Controls.Add(this.cmb_Departments);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -245,7 +247,6 @@
         private System.Windows.Forms.Button Insert_Button;
         private System.Windows.Forms.Button Delete_Button;
         private System.Windows.Forms.Button Update_Button;
-        private System.Windows.Forms.TextBox ID_TextBox;
         private System.Windows.Forms.TextBox SurName_TextBox;
         private System.Windows.Forms.TextBox Name_TextBox;
         private System.Windows.Forms.Label label2;
@@ -257,6 +258,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox dpt_Id_TextBox;
     }
 }
 
